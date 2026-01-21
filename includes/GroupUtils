@@ -1,0 +1,30 @@
+var GroupUtils = Class.create();
+GroupUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+
+  getUsersInGroup: function(group) {
+    
+    var members;
+    
+    var gr = new GlideRecord('sys_user_group');
+    gr.addQuery('name', group);
+    gr.setLimit(1);
+    gr.Query();
+
+    var grMembers = new GlideRecord('sys_user_grmember');
+    grMembers.addQuery('group', gr.getUniqueValue());
+    grMembers.Query();
+
+    while (grMembers.next) {
+      members += grMembers.user;
+      if (grMembers.next) {
+        members += ","
+      }
+    }
+    return members;
+  }
+
+  isGroupMember(user, group) {
+  }
+
+  type: 'GroupUtils'
+});
