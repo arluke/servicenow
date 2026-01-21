@@ -11,16 +11,17 @@ GroupUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
     var grName = new GlideRecord('sys_user_group');
     grName.addQuery('name', group);
     grName.setLimit(1);
-    grName.Query();
-
-    var grMembers = new GlideRecord('sys_user_grmember');
-    grMembers.addQuery('group', grName.getUniqueValue());
-    grMembers.Query();
-
-    while (grMembers.next) {
-      members += grMembers.user;
-      if (grMembers.next) {
-        members += ","
+    grName.query();
+    if grName.next() {
+      var grMembers = new GlideRecord('sys_user_grmember');
+      grMembers.addQuery('group', grName.getUniqueValue());
+      grMembers.query();
+  
+      while (grMembers.next) {
+        members += grMembers.user;
+        if (grMembers.hasNext) {
+          members += ","
+        }
       }
     }
     return members;
